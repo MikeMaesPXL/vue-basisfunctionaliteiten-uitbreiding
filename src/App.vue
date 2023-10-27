@@ -6,6 +6,11 @@
         name: '',
         counter: 0,
         jsConfetti: new JSConfetti(),
+        taskList: [],
+        currentTask: {
+          name:'',
+          id:this.id
+        }
       }
     },
 
@@ -15,7 +20,14 @@
         if (this.name === '') {
           return ''
         }
-        return `${this.name} Braibant`
+        return `${this.name} Maes`
+      },
+
+      addConfetti() {
+        if (this.counter > 6) {
+          this.jsConfetti.addConfetti();
+          return "Doel bereikt";
+        }
       },
     },
 
@@ -25,12 +37,33 @@
         if (this.name === '') {
           return ''
         }
-        return `${this.name} Braibant`
+        return `${this.name} Maes`
       },
       
       addOne() {
         this.counter += 1
-      }
+      },
+
+      addTask() {
+        let newTask = {
+          name:this.currentTask.name,
+          id:this.currentTask.id
+        }  
+        this.taskList.push(newTask);
+        this.id++;
+      },
+
+      removeTask(index) {
+        this.taskList.splice(index, this.id);
+      },
+
+      taskEmptyOrNot() {
+        if (this.taskList == "") {
+          return "Alle taken werden uitgevoerd"
+        } else {
+          return "Er zijn nieuwe taken beschikbaar"
+        }
+      },
     }
   }
 </script>
@@ -39,7 +72,7 @@
   <div class="container">
     <div class="form__field">
       <label for="firstName">Voornaam:</label>
-      <input type="text" id="fistName" v-model="name">
+      <input type="text" id="firstName" v-model="name">
     </div>
     <div class="result">
       <h3>Volledige naam met methode</h3>
@@ -57,6 +90,17 @@
       <h3>Teller</h3>
       <p>{{ counter }}</p>
       <button @click="addOne()">Tel 1 bij</button>
+      <p>{{ addConfetti }}</p>
+    </div>
+    <div class="result">
+      <ul>
+        <li @click="removeItem(index)" v-for="(task, index) in taskList" :key="task.id">
+          <p> {{ index }} {{ task.name }}</p>
+        </li>
+      </ul>
+      <input type="text" v-model="currentTask.name">
+      <button class="button_padding" v-on:click="addTask()">Add Task</button>
+      <p>{{ taskEmptyOrNot() }}</p>
     </div>
   </div>
 </template>
@@ -82,5 +126,10 @@
   border-radius: 5px;
   margin: 2rem auto;
   padding: 1rem;
+}
+
+.button_padding {
+  padding: 5px;
+  margin: 10px;
 }
 </style>
