@@ -1,9 +1,11 @@
 <script>
+  import JSConfetti from 'js-confetti'
   export default {
     data() {
       return {
         name: '',
-        counter: 0
+        counter: 0,
+        jsConfetti: new JSConfetti(),
       }
     },
 
