@@ -1,5 +1,6 @@
 <script>
   import JSConfetti from 'js-confetti'
+  import taskComponent from '@/components/taskComponent.vue'
   export default {
     data() {
       return {
@@ -9,11 +10,15 @@
         taskList: [],
         currentTask: {
           name:'',
-          id:this.id
-        }
-      }
+          id:this.id,
+          label:'',
+          priority: ''
+        },
+      };
     },
-
+    components: {
+      taskComponent
+    },
     computed: {
       outputFullNameComputed() {
         console.log('Computed');
@@ -47,9 +52,14 @@
       addTask() {
         let newTask = {
           name:this.currentTask.name,
-          id:this.currentTask.id
+          id:this.currentTask.id,
+          priority:this.currentTask.priority,
+          label:this.currentTask.label
         }  
         this.taskList.push(newTask);
+        this.name = "";
+        this.label = "";
+        this.priority = "";
         this.id++;
       },
 
@@ -70,7 +80,7 @@
 
 <template>
   <div class="container">
-    <div class="form__field">
+    <div class="result">
       <label for="firstName">Voornaam:</label>
       <input type="text" id="firstName" v-model="name">
     </div>
@@ -89,19 +99,25 @@
     <div class="result">
       <h3>Teller</h3>
       <p>{{ counter }}</p>
-      <button @click="addOne()">Tel 1 bij</button>
+      <button class="button__padding" @click="addOne()">Tel 1 bij</button>
       <p>{{ addConfetti }}</p>
     </div>
+
     <div class="result">
       <ul>
-        <li @click="removeItem(index)" v-for="(task, index) in taskList" :key="task.id">
-          <p> {{ index }} {{ task.name }}</p>
-        </li>
+        <taskComponent v-for="(task, index) in taskList" :key="task.id"
+        v-bind:task="task"
+        v-bind:index="index"
+        />
       </ul>
       <input type="text" v-model="currentTask.name">
-      <button class="button_padding" v-on:click="addTask()">Add Task</button>
+      <input type="text" v-model="currentTask.label">
+      <input type="text" v-model="currentTask.priority">
+      <button class="button__padding" v-on:click="addTask()">Add Task</button>
       <p>{{ taskEmptyOrNot() }}</p>
     </div>
+
+    
   </div>
 </template>
 
@@ -128,8 +144,16 @@
   padding: 1rem;
 }
 
-.button_padding {
+.button__padding {
   padding: 5px;
   margin: 10px;
+}
+
+li {
+  list-style: none;
+}
+
+input {
+  margin-right: 15px;
 }
 </style>
